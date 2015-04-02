@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GoTap</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles/result.css">
+    <link rel="stylesheet" type="text/css" href="styles/weather-icons.min.css">
+</head>
+
+<body>
+
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="/">
+	        <img alt="logo" src="images/GoTap_Logo_Smallest.png">
+	      </a>
+	    </div>
+
+	    <div class="navbar-right to-the-left">
+	    	<form class="form" action ="/" method = "GET">
+			    %if signed_in:
+			    	<p class="navbar-text">Signed in as <a href="#" class="navbar-link">{{cur_user}}</a></p>
+			    	<input type="submit" class="btn btn-default navbar-btn" name="Sign-out" value="Sign Out">
+			    %else:
+			    	<button type="submit" class="btn btn-default navbar-btn" name="Sign-in" value="Sign In">Sign In</button>
+			    %end
+			</form>
+		</div>
+	  </div>
+	</nav>
+
+	<div class="container-fluid">
+
+	    <div class="row">
+	    	<div class="col-md-3"></div>
+	    	<div class="col-md-6">
+	    		<h2 class="text-thin">Search Results</h2>
+	    	</div>
+	    </div>
+
+	    <div class="row">
+		    <div class='col-md-3'></div>
+		    <div class='col-md-6'>
+		        <form class="form-search" action ="/" method = "GET">
+			        <div class="input-group">
+				        <input type="text" name="keywords" class="form-control" id="autocomplete" value="{{search_display}}">
+				        <span class="input-group-btn">
+				        	<button type="submit" class="btn btn-default" id="search_button" onclick="doSomething();"><i class="glyphicon glyphicon-search"></i></button>
+				        </span>
+			        </div>
+		        </form>
+		    </div>
+		</div>
+
+		<script>
+		$(function() {
+		    var list_of_titles = {{!auto_comp}};
+		    console.log(list_of_titles)
+		    $( "#autocomplete" ).autocomplete({
+		      source: list_of_titles,
+		      select: function (event, ui) {
+		      	$("#autocomplete").val(ui.item.value);
+		      	return document.getElementById('search_button').click();
+		      }
+		    })
+		  });
+		</script>
+
+	    <div class="row">
+	    	<div class="col-md-3"></div>
+	    	<div class="col-md-6">
+	    		<br>
+	    		<h4 class="text-thin">About {{num_of_results}} results found for "{{search_display}}"</h4>
+	    		<br>
+	    	</div>
+	    </div>
+
+        %if math_r != "not_math":
+        	<div class="row text-tweet">
+               	<div class="col-md-3"></div>
+       	        <div class="col-md-6"> 	
+	    	    		<a href="#" class="well well-lg list-group-item">
+			    	    	<div class="media">
+			    	    	  <div class="media-left">
+			    	    	    <i class="fa fa-calculator"></i>
+			    	    	  </div>
+			    	    	  <div class="media-body">
+				    	    	  <h4 class="media-heading list-group-item-heading">{{search_display}} = {{math_r}}</h4>
+			    	    	  </div>
+			    	    	</div>
+		    	    	</a>
+    		    </div>
+    	    </div>
+        %end
+
+        %if weather_r:
+        	<div class="row text-tweet">
+               	<div class="col-md-3"></div>
+       	        <div class="col-md-6"> 	
+	    	    		<a href="http://forecast.io/" class="well well-lg list-group-item">
+			    	    	<div class="media">
+			    	    	  <div class="media-left">
+			    	    	    <i class="{{weather_r["now_icon"]}}"></i>
+			    	    	  </div>
+			    	    	  <div class="media-body">
+				    	    	  <h4 class="media-heading list-group-item-heading">{{weather_r["now_temp"]}}°C</h4>
+				    	    	  <p class="media-heading list-group-item-heading">Now: {{weather_r["now_summary"]}} &middot; Feels like {{weather_r['now_temp_feels']}}°C</p>				    	    	  
+				    	    	  <p class="media-heading list-group-item-heading">Forecast: {{weather_r["hr_summary"]}}</p>
+			    	    	  </div>
+			    	    	</div>
+		    	    	</a>
+    		    </div>
+    	    </div>
+        	<div class="row">
+               	<div class="col-md-3"></div>
+       	        <div class="col-md-6 text-right"> 	
+	    	    		more on <a href="http://forecast.io/">Forecast.io</a>
+    		    </div>
+    	    </div>
+        %end
+
+        %if define_r:
+        	<div class="row text-tweet">
+               	<div class="col-md-3"></div>
+       	        <div class="col-md-6"> 	
+	    	    		<a href="http://forecast.io/" class="well well-lg list-group-item">
+			    	    	<div class="media">
+			    	    	  <div class="media-left">
+			    	    	    <i class="fa fa-book"></i>
+			    	    	  </div>
+			    	    	  <div class="media-body">
+				    	    	  <h4 class="media-heading list-group-item-heading">{{search_display.split()[1]}}</h4>
+
+				    	    	  %for item in define_r:			    	    	  
+				    	    	  	<p class="media-heading list-group-item-heading">{{item[0]}}<span style="margin-left:20px;">{{item[1]}}</span></p>
+				    	    	  %end
+			    	    	  </div>
+			    	    	</div>
+		    	    	</a>
+    		    </div>
+    	    </div>
+        	<div class="row">
+               	<div class="col-md-3"></div>
+       	        <div class="col-md-6 text-right"> 	
+	    	    		more on <a href="http://www.wordnik.com/words/{{search_display.split()[1]}}">Wordnik</a>
+    		    </div>
+    	    </div>
+        %end        
+
+        %if url_list_with_rank:
+    		    <div class="row text-result">
+    		    	<div class="col-md-3"></div>
+    		    	<div class="col-md-6">
+    		    		<div class="list-group">
+	    		    		%for item in url_list_with_rank:
+		    			    	<a href="{{item[1]}}" class="list-group-item">
+		    			    		<br>
+			    			    	<h4 class="list-group-item-heading">{{item[0]}}</h4>
+			    			    	<span class="badge">{{round(item[2],4)}}</span>
+			    			    	<p class="list-group-item-heading">{{item[1]}}</p>
+			    			    	<br>
+		    			    	</a>
+		    				%end    
+		    			</div>
+		    		</div>
+    		    </div>	
+
+				%if suggested:
+
+				<div class="row">
+			    	<div class="col-md-3"></div>
+			    	<div class="col-md-6">
+			    		<h4><i class="fa fa-search-plus"></i> Search Suggestions</h4><br>
+			    	</div>
+			    </div>
+
+    		    <div class="row text-result">
+    		    	<div class="col-md-3"></div>
+    		    	<div class="col-md-6">
+    		    		<div class="list-group">
+	    		    		%for item in suggested:
+		    			    	<a href="/?keywords={{item.replace(" ","+")}}" class="list-group-item">
+			    			    	<p class="list-group-item-heading">{{item}}</p>
+		    			    	</a>
+		    				%end    
+		    			</div>
+		    		</div>
+    		    </div>
+    		    %end
+
+        %elif math_r == "not_math" and not weather_r and not define_r:
+    	    <div class="row">
+    	    	<div class="col-md-3"></div>
+    	    	<div class="col-md-6">
+    	    		<div class="list-group">
+    	    			<a href="#" class="list-group-item">
+    	    			<h4 class="list-group-item-heading">No result to display</h4>
+    	    			</a>
+    	    		</div>
+    	    	</div>
+        </div> 
+        %end
+
+	    %if url_list_with_rank:
+        	<div class="row">
+	        	<div class="col-md-12 text-center">
+				    <nav>
+				      <ul class="pagination">
+					    %if cur_page > 1 and len(num_of_page) > 0:
+					        <li><a href="/?keywords={{search_param}}&page={{cur_page-1}}"><span aria-hidden="true">&laquo; Prev</span><span class="sr-only">Previous</span></a></li>
+					    %else:
+					    	<li class="disabled"><a href="#"><span aria-hidden="true">&laquo; Prev</span><span class="sr-only">Previous</span></a></li>
+					    %end
+					    %for i in num_of_page: 
+					        %if i == cur_page:
+					            <li class="active"><a href="#">{{i}}</a></li>
+					        %else:
+					            <li><a href="/?keywords={{search_param}}&page={{i}}">{{i}}</a></li>
+					        %end
+					    %end
+					    %if cur_page < len(num_of_page):
+					        <li><a href="/?keywords={{search_param}}&page={{cur_page+1}}"><span aria-hidden="true">Next &raquo;</span><span class="sr-only">Next</span></a></li>
+					    %else:
+					    	<li class="disabled"><a href="#"><span aria-hidden="true">Next &raquo;</span><span class="sr-only">Next</span></a></li>
+					    
+					    %end
+				      </ul>
+				    </nav>
+				</div>
+			</div>
+		%end
+
+	    <div class="row">
+	    	<div class="col-md-12">
+	    		<br>
+	    	</div>
+	    </div> 
+
+	    %if twitter_r:
+        <div class="row">
+        	<div class="col-md-3"></div>
+        	<div class="col-md-6">
+        		<h2 class="text-thin"><i class="fa fa-twitter"></i> Twitter Results</h2>
+        		<br>
+        	</div>
+        </div>
+
+        	<div class="row text-tweet">
+               	<div class="col-md-3"></div>
+       	        <div class="col-md-6"> 	
+	    	    	%for item in twitter_r:
+	    	    		<a href="http://twitter.com/{{item[0]}}" class="well well-lg list-group-item">
+			    	    	<div class="media">
+			    	    	  <div class="media-left">
+			    	    	    <img class="list-group-item-heading" src="{{item[1]}}" alt="Twitter image">
+			    	    	  </div>
+			    	    	  <div class="media-body">
+				    	    	  <h5 class="media-heading list-group-item-heading"><i class="fa fa-at"></i>{{item[0]}}</h5>
+				    	    	  <p class="media-heading list-group-item-heading">{{item[2]}}</p>
+			    	    	  </div>
+			    	    	</div>
+		    	    	</a>
+		    	    	
+	    		    %end
+    		    </div>
+    	    </div>
+        %end
+
+	    <div class="row">
+	    	<div class="col-md-12">
+	    		<br>
+	    	</div>
+	    </div> 
+
+	    %if instagram_r:
+		    <div class="row">
+		    	<div class="col-md-3"></div>
+		    	<div class="col-md-6">
+		    		<h2 class="text-thin"><i class="fa fa-instagram"></i> Instagram Results</h2>
+		    		<br>
+		    	</div>
+		    </div>
+
+	        <div class="row text-insta">
+	        	<div class="col-md-3"></div>
+	            %for item in instagram_r:
+	        	<div class="col-md-1">
+		        	<a href="{{item[0]}}">
+		        		<img class="img-responsive img-rounded thumbnail" src="{{item[0]}}">
+		        	</a>
+		        	<p>@{{item[1]}}</p>
+		        </div>
+		        %end
+		        <div class="col-md-1"></div>
+		    </div>
+	    %end
+
+	    <div class="row">
+	    	<div class="col-md-12">
+	    		<br>
+	    	</div>
+	    </div> 
+    </div>
+
+    <form action ="/" method = "GET">
+        <input type="hidden" name="page" id="page">
+    </form> 
+</body>
+</html>

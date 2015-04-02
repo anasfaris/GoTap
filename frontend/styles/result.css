@@ -1,0 +1,36 @@
+
+body {
+	font-family: 'Lato', sans-serif;
+	color: #1F1F1F;
+	font-weight: 300;
+	padding-top: 95px;
+}
+
+.text-insta {
+	color: #4E433C;
+	font-size: 15px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.text-tweet {
+	color: #00A0D1;
+	font-size: 15px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.text-thin {
+	font-weight: 100;
+}
+
+.to-the-left {
+	padding-right: 15px;
+}
+
+.text-result {
+	font-size: 15px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.nav, .pagination, .carousel, .panel-title a { 
+	cursor: pointer; 
+}
